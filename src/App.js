@@ -1,6 +1,6 @@
 import React, { useReducer } from 'react';
 import reducer, { initialState } from './reducers';
-import { input } from './actions';
+import { input, clear, operator } from './actions';
 
 import './App.css';
 
@@ -13,6 +13,16 @@ function App() {
   function inputNumber (number){
     dispatch(input(number))
   }
+
+  function clearDisplay (){
+    dispatch(clear())
+  }
+
+  function inputOperator (op){
+    dispatch(operator(op))
+  }
+
+  console.log(state)
 
   return (
     <div className="App">
@@ -27,14 +37,14 @@ function App() {
             <TotalDisplay value={state.display}/>
             <div className="row details">
               <span id="operation"><b>Operation:</b>{state.operation}</span>
-              <span id="memory"><b>Memory:</b>{0}</span>
+              <span id="memory"><b>Memory:</b>{state.firstNum}</span>
             </div>
 
             <div className="row">
-              <CalcButton value={"+"} />
-              <CalcButton value={"*"} />
-              <CalcButton value={"-"} />
-              <CalcButton value={"/"} />
+              <CalcButton value={"+"} onClick={() => {inputOperator('+')}} />
+              <CalcButton value={"*"} onClick={() => {inputOperator('*')}} />
+              <CalcButton value={"-"} onClick={() => {inputOperator('-')}} />
+              <CalcButton value={"/"} onClick={() => {inputOperator('/')}} />
             </div>
             
             <div className="row">
@@ -60,15 +70,15 @@ function App() {
                   <CalcButton value={8} onClick={() => {inputNumber(8)}} />
                   <CalcButton value={9} onClick={() => {inputNumber(9)}} />
                 </div>
+
+                <div className="row">
+                  <CalcButton value='.' onClick={() => {inputNumber('.')}} />
+                  <CalcButton value={0}  onClick={() => {inputNumber(0)}}/>
+                  <CalcButton value={"CE"} onClick={clearDisplay} />
+                </div>
               </div>
 
               <CalcButton className='equal' value={"="} size={12}/>
-            </div>
-
-            <div className="row">
-              <CalcButton value='.' onClick={() => {inputNumber('.')}} />
-              <CalcButton value={0}  onClick={() => {inputNumber(0)}}/>
-              <CalcButton value={"CE"} />
             </div>
 
           </form>
