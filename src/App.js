@@ -1,6 +1,6 @@
 import React, { useReducer } from 'react';
 import reducer, { initialState } from './reducers';
-import { input, clear, operator } from './actions';
+import { input, clear, operator, submit, submit_equals } from './actions';
 
 import './App.css';
 
@@ -20,6 +20,10 @@ function App() {
 
   function inputOperator (op){
     dispatch(operator(op))
+  }
+
+  function submitEquals (){
+    dispatch(submit())
   }
 
   console.log(state)
@@ -78,7 +82,7 @@ function App() {
                 </div>
               </div>
 
-              <CalcButton className='equal' value={"="} size={12}/>
+              <CalcButton className='equal' value={"="} size={12} onClick={submitEquals} />
             </div>
 
           </form>

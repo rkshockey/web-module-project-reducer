@@ -1,10 +1,11 @@
-import { input_num, clear_display, input_operator } from './../actions';
+import { input_num, clear_display, input_operator, submit_equals } from './../actions';
 
 export const initialState = {
     display: '0',
     operation: null,
     firstNum: null,
-    waitingForSecondNum: false
+    waitingForSecondNum: false,
+    lastWasSubmit: false
 }
 
 const calculateResult = (num1, num2, operation) => {
@@ -26,18 +27,20 @@ const calculateResult = (num1, num2, operation) => {
 const reducer = (state, action) => {
     switch(action.type) {
         case(input_num):
-            if (state.display == 0 || state.waitingForSecondNum){
+            if (state.display === '0' || state.waitingForSecondNum || state.lastWasSubmit){
                 if (action.payload === '.'){
                     return ({
                         ...state,
                         display: '0.',
-                        waitingForSecondNum: false
+                        waitingForSecondNum: false,
+                        lastWasSubmit: false
                     })
                 }else{
                     return ({
                         ...state,
                         display: `${action.payload}`,
                         waitingForSecondNum: false,
+                        lastWasSubmit: false
                     })
                 }
             }else{
@@ -55,7 +58,12 @@ const reducer = (state, action) => {
             return (initialState)
 
         case(input_operator):
-            if (!state.firstNum){
+            if (state.waitingForSecondNum === true){
+                return {
+                    ...state,
+                    operation: action.payload
+                }
+            }else if (!state.firstNum){
                 return {
                     ...state,
                     firstNum: Number(state.display),
@@ -71,6 +79,16 @@ const reducer = (state, action) => {
                     waitingForSecondNum: true
                 }
             }
+
+        case(submit_equals):
+            return ({
+                ...state,
+                display: calculateResult(state.firstNum, Number(state.display), state.operation),
+                firstNum: null,
+                operation: null,
+                waitingForSecondNum: false,
+                lastWasSubmit: true
+            })
 
         default:
             return state
