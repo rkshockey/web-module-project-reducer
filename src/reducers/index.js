@@ -1,62 +1,51 @@
-import { ADD_ONE, APPLY_NUMBER, CHANGE_OPERATION, CLEAR_DISPLAY, ADD_MEMORY, CLEAR_MEMORY } from './../actions';
+import { input_num } from './../actions';
 
 export const initialState = {
-    total: 0,
-    operation: "+",
-    memory: 0
+    display: 0,
+    operation: "",
+    firstNum: null,
+    waitingForSecondNum: false,
 }
 
 const calculateResult = (num1, num2, operation) => {
     switch(operation) {
+        case(''):
+            return num1
         case("+"):
-            return num1 + num2;
+            return `${Number(num1) + Number(num2)}`;
         case("*"):
-            return num1 * num2;
+            return `${Number(num1) * Number(num2)}`;
         case("-"):
-            return num1 - num2;
+            return `${Number(num1) - Number(num2)}`;
+        case('/'):
+            return `${Number(num1) / Number(num2)}`;
     }
 }
 
 const reducer = (state, action) => {
     switch(action.type) {
-        case(ADD_ONE):
-            return({
-                ...state,
-                total: state.total + 1
-            });
-
-        case(APPLY_NUMBER):
-            return ({ 
-                ...state, 
-                total: calculateResult(state.total, action.payload, state.operation)
-            });
-        
-        case(CHANGE_OPERATION):
-            return ({
-                ...state,
-                operation: action.payload
-            });
-
-        case(CLEAR_DISPLAY):
-            return ({
-                ...state,
-                total: 0
-            })
-
-        case(ADD_MEMORY):
-            return ({
-                ...state,
-                memory: state.total
-            })
-        
-        case(CLEAR_MEMORY):
-            return ({
-                ...state,
-                memory: 0
-            })
-            
-        default:
-            return state;
+        case(input_num):
+            if (state.display === 0){
+                if (action.payload === '.'){
+                    return ({
+                        ...state,
+                        display: '0.'
+                    })
+                }else{
+                    return ({
+                        ...state,
+                        display: `${action.payload}`
+                    })
+                }
+            }else{
+                if (action.payload === '.' && state.display.includes('.')){
+                    return state
+                }
+                    return {
+                        ...state,
+                        display: (`${state.display}${action.payload}`)
+                    }
+            }
     }
 }
 

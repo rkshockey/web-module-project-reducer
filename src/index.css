@@ -87,3 +87,12 @@ button:active {
   margin-right: auto !important;
   margin-left: auto !important;
 }
+
+.flex {
+  display: flex;
+  align-items: flex-end;
+}
+
+.equal {
+  height: 300px;
+}
